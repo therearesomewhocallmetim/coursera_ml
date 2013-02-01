@@ -1,5 +1,8 @@
-use "/Users/dtv/Documents/Coursera_Programming/2.sml" ;
-			
+(* use "/Users/dtv/Documents/Coursera_Programming/2.sml" ;
+*)			
+
+(* use "C:/Users/danshin/Documents/Misc/ml/2.ml"; *)
+
 
 fun check [] = "ok"
   | check (false::xs) = "<----------------------------FAIL---------<<<"
@@ -202,8 +205,10 @@ fun test_sum_cards() =
 fun test_score() =
 	let
 		val test = [
-			score([(Hearts, Jack), (Hearts, Queen), (Hearts, Queen), (Diamonds, Queen)], 20) = 10,
+			score([(Hearts, Jack), (Hearts, Queen), (Hearts, Queen), (Diamonds, Queen)], 20) = 30,
 			score([(Hearts, Num(2)), (Hearts, Num(3)), (Spades, Num(4)), (Diamonds, Num(5))], 20) = 6,
+			score([(Hearts, Num(2)), (Hearts, Num(3)), (Spades, Num(4)), (Diamonds, Num(5))], 10) = 12,
+			score([(Hearts, Num(2)), (Hearts, Num(3)), (Diamonds, Num(4)), (Diamonds, Num(5))], 10) = 6,
 			score([(Hearts, Num(2)), (Hearts, Num(3)), (Hearts, Num(4)), (Diamonds, Num(5)),
 			           (Hearts, Num(6)), (Hearts, Num(7)), (Hearts, Num(8)), (Diamonds, Num(9)),
 					   (Hearts, Num(10)), (Hearts, Jack), (Hearts, Queen), (Diamonds, King), (Diamonds, Ace)], 95) = 0
@@ -227,9 +232,10 @@ fun test_helper_officiate() =
 
 		val moves3 = [Draw, Discard (Hearts, Num(2)), Draw, Draw]
 		val test = [
-			helper_officiate(cards, [], moves, 50, 0) = ((50 - 7), 0),
-			helper_officiate(cards, [], moves2, 50, 0) = (50 - 18, 0),
-			helper_officiate(cards2, [], moves2, 50, 0) = (50 - 18, 2)
+			helper_officiate(cards, [], moves, 50) = [(Hearts, Num(4)), (Hearts, Num(3))],
+			helper_officiate(cards, [], moves2, 50) = [(Hearts, Num(6)), (Diamonds, Num(5)), (Hearts, Num(3)),
+				(Hearts, Num(4))],
+			helper_officiate(cards2, [], moves2, 50) = [(Hearts,Num 6),(Diamonds,Num 5),(Spades,Num 3),(Clubs,Num 4)]
 		]
 	in
 		check(test)
@@ -241,12 +247,18 @@ fun test_officiate() =
 		val cards = [(Hearts, Num(2)), (Hearts, Num(3)), (Hearts, Num(4)), (Diamonds, Num(5)),
 				(Hearts, Num(6)), (Hearts, Num(7)), (Hearts, Num(8)), (Diamonds, Num(9)),
 				(Hearts, Num(10)), (Hearts, Jack), (Hearts, Queen), (Diamonds, King), (Diamonds, Ace)]
+		val cards2 = [(Hearts, Num(2)), (Hearts, Num(3)), (Hearts, Num(4)), (Diamonds, Num(5)),
+				(Clubs, Num(6)), (Hearts, Num(7)), (Hearts, Num(8)), (Diamonds, Num(9)),
+				(Hearts, Num(10)), (Hearts, Jack), (Hearts, Queen), (Diamonds, King), (Diamonds, Ace)]
 		val moves  = [Draw, Discard (Hearts, Num(2)), Draw, Draw]
 		val moves2 = [Draw, Draw, Draw, Discard (Hearts, Num(2)), Draw, Draw]
 (*		val moves3 = [Draw, Discard (Hearts, Num(2)), Draw, Draw] *)
 		val test = [
-			officiate(cards, moves, 50) = (50 - 7),
-			officiate(cards, moves2, 50) = (50 - 18)
+			officiate(cards, moves, 50) = ((50 - 7) div 2),
+			officiate([], moves, 50) = (50),
+			officiate(cards, [], 50) = (0),
+			officiate(cards, moves2, 10) = ((18 - 10) * 3 div 2),
+			officiate(cards2, moves2, 10) = ((18 - 10) * 3)
 		]
 	in
 		check(test)

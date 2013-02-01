@@ -33,6 +33,15 @@ fun get_substitutions1 ([], patt) = []
 		
 		
 (* c *)
+fun get_substitutions2 ([], patt) = []
+  | get_substitutions2 (alist :: lists, patt) =
+		let 
+			val opt = all_except_option(patt, alist)
+		in 
+			case opt of
+				SOME i => i @ get_substitutions2(lists, patt)
+				| NONE => get_substitutions2(lists, patt)
+		end 
 
 
 
@@ -50,24 +59,6 @@ fun similar_names ([], name) = [name]
   
   
   
-  
-  
-		
-(*
-fun i_all_except_option (str, []) = []
-  | i_all_except_option (str, s::[]) = 
-		if (not same_string(str, s)) then []
-		else 
-  | i_all_except_option (str, s::strings) = 
-	if (same_string(str, s)) then
-		strings
-	else
-		s :: i_all_except_option(str, strings)
-
-*)
-
-
-
 
 datatype suit = Clubs | Diamonds | Hearts | Spades
 datatype rank = Jack | Queen | King | Ace | Num of int
@@ -88,11 +79,6 @@ exception IllegalMove
 
 
 (* a *)
-(*
-fun card_color(c:card):color
-*)
-
-
 fun card_color(a_suit, a_rank) =
 	case a_suit of
 		Hearts   => Red
@@ -112,19 +98,21 @@ fun card_value(a_suit, a_rank) =
 
 
 (* c *)
-fun rc_helper ([], clean_cards, pat) = []
+fun rc_helper ([], clean_cards, pat) = clean_cards
   | rc_helper (dirty_card::dirty_cards, clean_cards, pat) =
 		if (dirty_card = pat) then
 			clean_cards @ dirty_cards
 		else
 			rc_helper(dirty_cards, dirty_card::clean_cards, pat)
- 
-  
-fun remove_card (cards, c, exc) = 
+
+			
+fun remove_card (cards, c, exc ) = 
 	let 
 		val clean_cards = rc_helper(cards, [], c)
+		val len_cards = length(cards)
+		val len_clean = length(clean_cards)
 	in 
-		if (length(clean_cards) = length(cards)) then
+		if (len_clean = len_cards) then
 			raise exc
 		else
 			clean_cards
@@ -154,12 +142,12 @@ fun score (cards, goal) =
 		val sum = sum_cards(cards)
 		val preliminary_score = 
 			if (sum > goal) then
-				sum - goal
+				(sum - goal) * 3
 			else 
 				goal - sum
 		
 		val final_score = 
-			if (all_same_color(cards)) then
+			if (all_same_color(cards) andalso card_color(hd cards) = Red) then
 				preliminary_score div 2
 			else 
 				preliminary_score
@@ -175,50 +163,68 @@ fun score (cards, goal) =
 
 
 
-(*
-fun helper_officiate(cards, hand, moves, goal) = 
+fun helper_officiate(cards, hand, [], goal) = hand
+  | helper_officiate([], hand, moves, goal) = hand
+  | helper_officiate(c::cards, hand, m::moves, goal) = 
+ 		if (goal < 0) then
+			hand
+		else 
+			case m of 
+				Draw => helper_officiate(cards, c::hand, moves, goal - card_value (c))
+			  | Discard dc => helper_officiate(c::cards, remove_card(hand, dc, IllegalMove), moves, goal + card_value(dc)) 
+ 
+
+fun officiate(cards, moves, goal) = 
+	score(helper_officiate(cards, [], moves, goal), goal)
+
 	
-*)
-
-(* 
-datatype move = Discard of card | Draw
-*)
-
-
-fun helper_officiate(cards, hand, [], goal, black) = (goal, black)
-  | helper_officiate([], hand, moves, goal, black) = (goal, black)
-  | helper_officiate(c::cards, hand, m::moves, goal, black) = 
-  		let 
-  			val black' = 
-  				if (card_color(c) = Black) then
-  					black + 1
-  				else
-  					black
-  		in
-	  		if (goal < 0) then
-  				(~goal, black)
-  			else 
-				case m of 
-					Draw => helper_officiate(cards, c::hand, moves, goal - card_value (c), black')
-				  | Discard dc => helper_officiate(c::cards, remove_card(hand, dc, IllegalMove), moves, goal + card_value(dc), black') 
-		end
+	
+(*
+	let 
+		val hand = helper_officiate(cards, [], moves, goal)
+		val pre_scrore = score(hand, goal)
+	
+	in 
+	
+	
+	end
+ *)
  
- 
+(*
  fun officiate(cards, moves, goal) = 
  	let
- 		fun calculate_score(pre_score, 0) = 
- 				pre_score
- 		  | calculate_score(pre_score, black) = 
- 		  		pre_score div 2
+ 		fun calculate_score(pre_score, reds) = 
+			let 
+				val preliminary_score = 
+					if (pre_score < 0) then
+						(~pre_score) * 3
+					else 	
+						pre_score
+				val final_score = 
+					if (reds  = length(cards)) then
+						preliminary_score div 2
+					else 
+						preliminary_score
+			in 
+				final_score
+			end
  	in
  		calculate_score(helper_officiate(cards, [], moves, goal, 0))
  	end
+ 
+ *)
+ 
+ 
  
  
 (** 3 **)
 (*  a  *)
 
-
+(* 
+realizing that i could use the functions i have written above as helper functions, that would lead to 
+very innefficient altorithms, that's why i decided to calculate the sum of the cards, the number of
+aces and black cards, i.e. if the latter is 0, we can divide the score by two.
+*)
 
 fun sum_cards_ch([], sum, aces, black) = (sum, aces, black)
   | sum_cards_ch((suit, rank)::cards, sum, aces, black) = 
