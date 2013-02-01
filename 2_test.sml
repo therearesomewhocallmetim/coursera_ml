@@ -256,7 +256,7 @@ fun test_officiate() =
 		val test = [
 			officiate(cards, moves, 50) = ((50 - 7) div 2),
 			officiate([], moves, 50) = (50),
-			officiate(cards, [], 50) = (0),
+			officiate(cards, [], 50) = (50),
 			officiate(cards, moves2, 10) = ((18 - 10) * 3 div 2),
 			officiate(cards2, moves2, 10) = ((18 - 10) * 3)
 		]

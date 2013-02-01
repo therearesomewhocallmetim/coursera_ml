@@ -137,7 +137,9 @@ fun sum_cards_helper([], sum) = sum
 fun sum_cards(cards) = sum_cards_helper(cards, 0)
 
 (* f *)
-fun score (cards, goal) = 
+
+fun score ([], goal) = goal div 2
+  | score (cards, goal) = 
 	let 
 		val sum = sum_cards(cards)
 		val preliminary_score = 
@@ -147,7 +149,7 @@ fun score (cards, goal) =
 				goal - sum
 		
 		val final_score = 
-			if (all_same_color(cards) andalso card_color(hd cards) = Red) then
+			if (all_same_color(cards)) then
 				preliminary_score div 2
 			else 
 				preliminary_score
@@ -179,43 +181,6 @@ fun officiate(cards, moves, goal) =
 
 	
 	
-(*
-	let 
-		val hand = helper_officiate(cards, [], moves, goal)
-		val pre_scrore = score(hand, goal)
-	
-	in 
-	
-	
-	end
- *)
- 
-(*
- fun officiate(cards, moves, goal) = 
- 	let
- 		fun calculate_score(pre_score, reds) = 
-			let 
-				val preliminary_score = 
-					if (pre_score < 0) then
-						(~pre_score) * 3
-					else 	
-						pre_score
-				val final_score = 
-					if (reds  = length(cards)) then
-						preliminary_score div 2
-					else 
-						preliminary_score
-			in 
-				final_score
-			end
- 	in
- 		calculate_score(helper_officiate(cards, [], moves, goal, 0))
- 	end
- 
- *)
- 
- 
- 
  
 (** 3 **)
 (*  a  *)
@@ -255,7 +220,7 @@ fun score_challenge(cards, goal) =
 			else 
 				sum - num_of_aces_required * 10
 	in
-		if (black = 0) then
+		if (black = 0 orelse black = length(cards)) then
 			prelim_score div 2
 		else
 			prelim_score
