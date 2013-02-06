@@ -100,6 +100,29 @@ fun test_rev_string() =
 	end
 
 
+
+	
+fun test_all_answers() =
+	let
+		fun test_function arg = 
+			if (arg < 5) then
+				SOME[Int.toString(arg) ^ "--"]
+			else 
+				NONE
+
+
+		val test = [
+				all_answers test_function [1,2,3] = SOME["1--","2--","3--"],
+				all_answers test_function [3,4,5] = NONE,
+				all_answers test_function [] = SOME[]
+			]
+	in
+		check(test)	
+	end
+
+
+	
+	
 (*
 fun test_() =
 	let
@@ -112,6 +135,13 @@ fun test_() =
 *)
 	
 	
+(* 7 *)
+
+
+
+
+(* 8 *)
+
 	
 	
 	
@@ -131,6 +161,9 @@ val test_longest_string3_ = test_longest_string3();
 val test_longest_string4_ = test_longest_string4();
 val test_longest_capitalized_ = test_longest_capitalized();
 val test_rev_string_ = test_rev_string();
+val test_all_answers_ =  test_all_answers();
+
+
 
 (*
 

@@ -92,6 +92,39 @@ fun first_answer somefun =
 		second_fun	
 	end
 
+	
+
+val a = 0;
+val b = 1;	
+val a' = 0;
+val b' = 1;	
+
+print("______________________________________________________\n");
+
+fun all_answers f1 [] = SOME[]
+  | all_answers f1 alist = 
+	let
+		fun iterate ([], acc) = acc
+		  | iterate (el::lst, acc) =
+				if (isSome(f1 el)) then
+					iterate(lst, acc @ valOf(f1 el) )
+				else
+					[]
+		val ret = iterate (alist, [])
+	in
+		case ret of
+			[] => NONE
+		  | _  => SOME ret
+	end
+		
+  
+	
+
+
+
+
+
+
 
 
 
