@@ -216,6 +216,40 @@ fun count_some_var (str, patrn) =
 
 (* 10 *)
 
+(* get all the variable strings from a list of patterns *)
+fun strings_from_lst (Variable(str)::tail) = str:: strings_from_lst(tail)
+  | strings_from_lst (TupleP(lst)::tail) = strings_from_lst(lst) @ strings_from_lst(tail)
+  | strings_from_lst (_::tail) = strings_from_lst(tail)
+  | strings_from_lst (_) = []
+  	
+(* get all var strings from a pattern using the helper above *)  	
+fun strings_from_pat (Variable(str)) = [str]
+  | strings_from_pat (TupleP(lst)) = strings_from_lst(lst)
+  | strings_from_pat (_) = []
+  
+(* check if the list contains only unique entries. Not optimal. In worst case it is almost
+   quadratic, might be better to sort the list beforehand. Basically, we could find
+   identical entries at the sorting stage. Would be n*log(n) *)
+fun unique_in_list([]) = true
+  | unique_in_list(str::lst) = 
+  	if (List.exists (fn (str_from_list) => str = str_from_list) lst) then
+  		false
+  	else
+  		unique_in_list(lst)
+
+(* now lets pipe pattern to get the strings from it and then check if they are unique *)
+fun check_pat(ptrn) = ptrn ~> strings_from_pat ~> unique_in_list  	
+	
+
+
+(* this is 14 lines of code :*)
+	
+	
+
+
+
+
+
 
 
 

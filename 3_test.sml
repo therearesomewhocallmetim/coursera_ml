@@ -177,6 +177,56 @@ fun test_count_some_var() =
 	end
 
 	
+	
+(* 10 *)
+fun test_strings_from_pat() =
+	let
+		val wildcards = Wildcard
+		val wildcards_2 = TupleP ([Wildcard, TupleP([Wildcard, ConstP(10)])])
+		val wildcards_6 = TupleP ([Wildcard, Variable("Hello"), Variable("a"), Variable("b")])
+		val wildcards_5 = TupleP ([Variable("Hello"), TupleP ([Wildcard, Variable("Hello"), Variable("a"), Variable("b")]), Variable("Bye")])
+		val test = [
+			strings_from_pat (wildcards) = [],
+			strings_from_pat (wildcards_2) = [],
+			strings_from_pat (wildcards_6) = ["Hello", "a", "b"], 
+			strings_from_pat (wildcards_5) = ["Hello", "Hello", "a", "b", "Bye"]
+		]
+	in
+		check(test)	
+	end
+
+	
+fun test_unique_in_list() =
+	let
+		val test = [
+			unique_in_list(["Hello", "Hello", "a", "b", "Bye"]) = false,
+			unique_in_list(["Hello", "a", "b", "Bye"]) = true
+		]
+	in
+		check(test)	
+	end
+	
+	
+fun test_check_pat() =
+	let
+		val wildcards = Wildcard
+		val wildcards_2 = TupleP ([Wildcard, TupleP([Wildcard, ConstP(10)])])
+		val wildcards_6 = TupleP ([Wildcard, Variable("Hello"), Variable("a"), Variable("b")])
+		val wildcards_5 = TupleP ([Variable("Hello"), TupleP ([Wildcard, Variable("Hello"), Variable("a"), Variable("b")]), Variable("Bye")])
+		val test = [
+			check_pat (wildcards) = true,
+			check_pat (wildcards_2) = true,
+			check_pat (wildcards_6) = true, 
+			check_pat (wildcards_5) = false
+		]
+	in
+		check(test)	
+	end
+
+
+
+
+
 (*
 fun test_() =
 	let
@@ -219,6 +269,9 @@ val test_all_answers_ =  test_all_answers();
 val test_count_whildcards_ = test_count_whildcards();
 val test_count_whild_and_variable_lengths_ = test_count_whild_and_variable_lengths();
 val test_count_some_var_ = test_count_some_var();
+val test_strings_from_pat_ = test_strings_from_pat();
+val test_unique_in_list_ = test_unique_in_list();
+val test_check_pat_ = test_check_pat();
 
 (*
 
