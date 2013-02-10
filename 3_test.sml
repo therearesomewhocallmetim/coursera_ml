@@ -155,6 +155,27 @@ fun test_count_whild_and_variable_lengths() =
 	in
 		check(test)	
 	end
+
+
+(* c *)	
+fun test_count_some_var() =
+	let
+		val wildcards = Wildcard
+		val wildcards_2 = TupleP ([Wildcard, TupleP([Wildcard, ConstP(10)])])
+		val wildcards_6 = TupleP ([Wildcard, Variable("Hello"), Variable("a"), Variable("b")])
+		val wildcards_5 = Variable("Hello")
+		val wildcards_0 = TupleP([Variable("a"), Variable("b")])
+		val test = [
+			count_some_var ("Hello", wildcards) = 0,
+			count_some_var ("Hello", wildcards_2) = 0,
+			count_some_var ("Hello", wildcards_6) = 1, 
+			count_some_var ("Hello", wildcards_5) = 1,
+			count_some_var ("Hello", wildcards_0) = 0
+		]
+	in
+		check(test)	
+	end
+
 	
 (*
 fun test_() =
@@ -197,6 +218,7 @@ val test_rev_string_ = test_rev_string();
 val test_all_answers_ =  test_all_answers();
 val test_count_whildcards_ = test_count_whildcards();
 val test_count_whild_and_variable_lengths_ = test_count_whild_and_variable_lengths();
+val test_count_some_var_ = test_count_some_var();
 
 (*
 

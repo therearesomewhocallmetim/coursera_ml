@@ -200,6 +200,49 @@ fun count_wild_and_variable_lengths patrn =
 	end 
 
 
+(* c *)
+
+fun count_some_var (str, patrn) = 
+	let
+		fun wildcard_matcher _ = 0
+		fun var_matcher str1 = 
+			if (str = str1) then
+				1
+			else
+				0
+	in
+		g wildcard_matcher var_matcher patrn		
+	end
+
+(* 10 *)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
