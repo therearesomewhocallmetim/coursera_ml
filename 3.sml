@@ -163,23 +163,6 @@ fun all_answers f1 [] = SOME[]
 (* 9 *)
 (* a *)
 
-(* 
-
-fun g f1 f2 p =
-    let 
-		val r = g f1 f2 
-    in
-	case p of
-	    Wildcard          => f1 ()
-	  | Variable x        => f2 x
-	  | TupleP ps         => List.foldl (fn (p,i) => (r p) + i) 0 ps
-	  | ConstructorP(_,p) => r p
-	  | _                 => 0
-    end
-    
-    *)
-
-
 fun count_wildcards patrn =
 	let
 		fun wildcard_matcher _ = 1
@@ -244,10 +227,39 @@ fun check_pat(ptrn) = ptrn ~> strings_from_pat ~> unique_in_list
 
 (* this is 14 lines of code :*)
 	
-	
+(* 11 *)
+
+(* 
+fun match (val:valu, pat: pattern) : (string * valu) list option
+*)	
+
+exception DoesntMatch
 
 
-
+fun match_list (_, Wildcard) = []
+  | match_list (a_value, Variable str) = [(str, a_value)]
+  | match_list (Unit, UnitP) = []
+  | match_list (Const x, ConstP y) = 
+  	if (x = y) then 
+  		[]
+  	else
+  		raise DoesntMatch
+  | match_list (Tuple([]), TupleP ps) = raise DoesntMatch
+  | match_list (Tuple vs, TupleP([])) = raise DoesntMatch
+  | match_list (Tuple (v::vs), TupleP (p::ps)) = 
+  	match_list (v, p) @ match_list (Tuple(vs), TupleP(ps))
+  | match_list (Constructor (str1, v), ConstructorP(str2, p)) = 
+  	if (str1 <> str2) then
+  		raise DoesntMatch
+  	else
+  		match_list(v, p)
+  | match_list (_, _) = raise DoesntMatch
+  
+  
+fun match (a_value, patrn) = (
+		SOME (match_list(a_value, patrn))
+	) 
+		handle DoesntMatch => NONE
 
 
 
