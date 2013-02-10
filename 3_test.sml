@@ -101,11 +101,13 @@ fun test_rev_string() =
 
 
 
-	
+
+
+(* 8 *)
 fun test_all_answers() =
 	let
 		fun test_function arg = 
-			if (arg < 5) then
+			if ((arg mod 5) > 0) then
 				SOME[Int.toString(arg) ^ "--"]
 			else 
 				NONE
@@ -122,6 +124,37 @@ fun test_all_answers() =
 
 
 	
+	
+	
+(* 9 *)	
+fun test_count_whildcards() =
+	let
+		val wildcards = Wildcard
+		val wildcards_2 = TupleP ([Wildcard, TupleP([Wildcard, ConstP(10)])])
+		val test = [
+			count_wildcards wildcards = 1,
+			count_wildcards wildcards_2 = 2
+		]
+	in
+		check(test)	
+	end
+	
+(* b *)	
+fun test_count_whild_and_variable_lengths() =
+	let
+		val wildcards = Wildcard
+		val wildcards_2 = TupleP ([Wildcard, TupleP([Wildcard, ConstP(10)])])
+		val wildcards_6 = TupleP ([Wildcard, Variable("Hello")])
+		val wildcards_5 = Variable("Hello")
+		val test = [
+			count_wild_and_variable_lengths wildcards = 1,
+			count_wild_and_variable_lengths wildcards_2 = 2,
+			count_wild_and_variable_lengths wildcards_6 = 6, 
+			count_wild_and_variable_lengths wildcards_5 = 5
+		]
+	in
+		check(test)	
+	end
 	
 (*
 fun test_() =
@@ -162,8 +195,8 @@ val test_longest_string4_ = test_longest_string4();
 val test_longest_capitalized_ = test_longest_capitalized();
 val test_rev_string_ = test_rev_string();
 val test_all_answers_ =  test_all_answers();
-
-
+val test_count_whildcards_ = test_count_whildcards();
+val test_count_whild_and_variable_lengths_ = test_count_whild_and_variable_lengths();
 
 (*
 

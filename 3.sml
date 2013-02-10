@@ -1,3 +1,43 @@
+(* Coursera Programming Languages, Homework 3, Provided Code *)
+
+exception NoAnswer
+
+datatype pattern = Wildcard
+		 | Variable of string
+		 | UnitP
+		 | ConstP of int
+		 | TupleP of pattern list
+		 | ConstructorP of string * pattern
+
+datatype valu = Const of int
+	      | Unit
+	      | Tuple of valu list
+	      | Constructor of string * valu
+
+fun g f1 f2 p =
+    let 
+		val r = g f1 f2 
+    in
+	case p of
+	    Wildcard          => f1 ()
+	  | Variable x        => f2 x
+	  | TupleP ps         => List.foldl (fn (p,i) => (r p) + i) 0 ps
+	  | ConstructorP(_,p) => r p
+	  | _                 => 0
+    end
+
+(**** for the challenge problem only ****)
+
+datatype typ = Anything
+	     | UnitT
+	     | IntT
+	     | TupleT of typ list
+	     | Datatype of string
+
+(**** you can put all your code here ****)
+
+
+
 infix ~>
 fun x ~> f = f(x)
 
@@ -77,7 +117,6 @@ val rev_string = implode o List.rev o explode
 
 (* 7 *)
 
-exception NoAnswer
 
 
 fun first_answer somefun =
@@ -116,14 +155,49 @@ fun all_answers f1 [] = SOME[]
 			[] => NONE
 		  | _  => SOME ret
 	end
-		
-  
-	
 
 
 
 
 
+(* 9 *)
+(* a *)
+
+(* 
+
+fun g f1 f2 p =
+    let 
+		val r = g f1 f2 
+    in
+	case p of
+	    Wildcard          => f1 ()
+	  | Variable x        => f2 x
+	  | TupleP ps         => List.foldl (fn (p,i) => (r p) + i) 0 ps
+	  | ConstructorP(_,p) => r p
+	  | _                 => 0
+    end
+    
+    *)
+
+
+fun count_wildcards patrn =
+	let
+		fun wildcard_matcher _ = 1
+		fun second_matcher _ = 0
+	in
+		g wildcard_matcher second_matcher patrn
+	end
+
+
+(* b *)
+
+fun count_wild_and_variable_lengths patrn = 
+	let 
+		fun wildcard_matcher _ = 1
+		fun var_matcher str = String.size(str)
+	in 
+		g wildcard_matcher var_matcher patrn
+	end 
 
 
 
