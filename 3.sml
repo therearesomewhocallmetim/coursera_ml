@@ -264,15 +264,15 @@ fun match (a_value, patrn) = (
 
 (* 12 *)
 
-fun first_match (a_value, []) = NONE
-  | first_match (a_value, patrn::tail) =
+fun first_match a_value ([]) = NONE
+  | first_match a_value (patrn::tail) =
   	let 
   		val match_result = match(a_value, patrn)
   	in 
   		if isSome(match_result) then
   			match_result
   		else
-  			first_match(a_value, tail)
+  			first_match a_value tail
   	end
   		
 
