@@ -41,21 +41,16 @@ datatype typ = Anything
 infix ~>
 fun x ~> f = f(x)
 
-fun first_char str = String.sub(str, 0)
-
 
 (* 1 *)
-(* fun only_capitals(strs) = List.filter (fn str => Char.isUpper(String.sub(str,0))) strs
-*)
+
+fun first_char str = String.sub(str, 0)
 
 fun only_capitals(strs) = strs ~> List.filter (fn str => str ~> first_char ~> Char.isUpper)
 
-(*
-fun helper(str) = str ~> first_char ~> Char.isUpper
 
-fun sqrt_of_abs x = x ~> abs ~> Real.fromInt ~> Math.sqrt
-*)
 (* 2 *)
+
 fun longest_string1 (strs) = 
 	List.foldl (
 		fn (str1, str2) => 
@@ -66,7 +61,9 @@ fun longest_string1 (strs) =
 		)
 		"" strs
 
+
 (* 3 *)
+
 fun longest_string2 (strs) = 
 	List.foldl (
 		fn (str1, str2) => 
@@ -79,7 +76,6 @@ fun longest_string2 (strs) =
 
 
 (* 4 *)
-
 
 fun longest_string_helper comparator =
 	let
@@ -100,24 +96,17 @@ val longest_string3 = longest_string_helper (fn (len1, len2) => len2 > len1)
 val longest_string4 = longest_string_helper (fn (len1, len2) => len2 >= len1)
 
 
-(*
-
-fun comparator (strlen1, strlen2) =
-	strlen1 > strlen2
-*)
-
-
 (* 5 *)
+
 val longest_capitalized = longest_string2 o only_capitals
 
+
 (* 6 *)
+
 val rev_string = implode o List.rev o explode
 
 
-
 (* 7 *)
-
-
 
 fun first_answer somefun =
 	let
@@ -131,14 +120,8 @@ fun first_answer somefun =
 		second_fun	
 	end
 
-	
 
-val a = 0;
-val b = 1;	
-val a' = 0;
-val b' = 1;	
-
-print("______________________________________________________\n");
+(* 8 *)
 
 fun all_answers f1 [] = SOME[]
   | all_answers f1 alist = 
@@ -157,11 +140,8 @@ fun all_answers f1 [] = SOME[]
 	end
 
 
-
-
-
 (* 9 *)
-(* a *)
+	(* a *)
 
 fun count_wildcards patrn =
 	let
@@ -172,7 +152,7 @@ fun count_wildcards patrn =
 	end
 
 
-(* b *)
+	(* b *)
 
 fun count_wild_and_variable_lengths patrn = 
 	let 
@@ -183,7 +163,7 @@ fun count_wild_and_variable_lengths patrn =
 	end 
 
 
-(* c *)
+	(* c *)
 
 fun count_some_var (str, patrn) = 
 	let
@@ -197,15 +177,18 @@ fun count_some_var (str, patrn) =
 		g wildcard_matcher var_matcher patrn		
 	end
 
+
 (* 10 *)
 
 (* get all the variable strings from a list of patterns *)
+
 fun strings_from_lst (Variable(str)::tail) = str:: strings_from_lst(tail)
   | strings_from_lst (TupleP(lst)::tail) = strings_from_lst(lst) @ strings_from_lst(tail)
   | strings_from_lst (_::tail) = strings_from_lst(tail)
   | strings_from_lst (_) = []
   	
 (* get all var strings from a pattern using the helper above *)  	
+
 fun strings_from_pat (Variable(str)) = [str]
   | strings_from_pat (TupleP(lst)) = strings_from_lst(lst)
   | strings_from_pat (_) = []
@@ -213,6 +196,7 @@ fun strings_from_pat (Variable(str)) = [str]
 (* check if the list contains only unique entries. Not optimal. In worst case it is almost
    quadratic, might be better to sort the list beforehand. Basically, we could find
    identical entries at the sorting stage. Would be n*log(n) *)
+
 fun unique_in_list([]) = true
   | unique_in_list(str::lst) = 
   	if (List.exists (fn (str_from_list) => str = str_from_list) lst) then
@@ -221,20 +205,15 @@ fun unique_in_list([]) = true
   		unique_in_list(lst)
 
 (* now lets pipe pattern to get the strings from it and then check if they are unique *)
-fun check_pat(ptrn) = ptrn ~> strings_from_pat ~> unique_in_list  	
-	
 
+fun check_pat(ptrn) = ptrn ~> strings_from_pat ~> unique_in_list  	
 
 (* this is 14 lines of code :*)
+
 	
 (* 11 *)
 
-(* 
-fun match (val:valu, pat: pattern) : (string * valu) list option
-*)	
-
 exception DoesntMatch
-
 
 fun match_list (_, Wildcard) = []
   | match_list (a_value, Variable str) = [(str, a_value)]
